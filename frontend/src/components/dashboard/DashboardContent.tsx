@@ -7,7 +7,7 @@ export default function DashboardContent() {
     <>
       <div className="page-header">
         <h1 className="page-title">Dashboard</h1>
-        <p className="page-description">Monitor your API performance and health</p>
+        <p className="page-description">Monitor your API performance, health and latency</p>
       </div>
 
       <div className="empty-state">
