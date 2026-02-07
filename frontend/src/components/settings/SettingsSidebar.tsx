@@ -1,6 +1,14 @@
 "use client";
 
 import { Settings, User } from "lucide-react";
+import {
+  Shield,
+  CreditCard,
+  Bell,
+  Plug,
+  Key,
+  Users,
+} from "lucide-react";
 
 export type SettingsTab = "general" | "account";
 
@@ -10,8 +18,15 @@ interface SettingsSidebarProps {
 }
 
 const menuItems = [
-  { id: "general" as SettingsTab, label: "General", icon: Settings },
-  { id: "account" as SettingsTab, label: "Account", icon: User },
+{ id: "general" as SettingsTab, label: "General", icon: Settings },
+{ id: "account" as SettingsTab, label: "Account", icon: User },
+{ id: "security" as SettingsTab, label: "Security", icon: Shield },
+{ id: "billing" as SettingsTab, label: "Billing", icon: CreditCard },
+{ id: "notifications" as SettingsTab, label: "Notifications", icon: Bell },
+{ id: "integrations" as SettingsTab, label: "Integrations", icon: Plug },
+{ id: "api-keys" as SettingsTab, label: "API Keys", icon: Key },
+{ id: "team" as SettingsTab, label: "Team", icon: Users },
+
 ];
 
 export default function SettingsSidebar({ activeTab, onTabChange }: SettingsSidebarProps) {
