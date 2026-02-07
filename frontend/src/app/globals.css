@@ -79,6 +79,12 @@ body {
   background-color: var(--bg-primary);
 }
 
+/* When main-content contains settings page, prevent parent scroll */
+.main-content:has(.settings-page) {
+  overflow: hidden;
+  padding: 0;
+}
+
 /* Account Layout (no sidebar) */
 .account-layout {
   min-height: 100vh;
@@ -746,6 +752,9 @@ body {
   flex-direction: column;
   height: calc(100vh - var(--navbar-height));
   overflow: hidden;
+  overscroll-behavior: contain;
+  padding: 24px;
+  padding-bottom: 0;
 }
 
 .settings-page-header {
@@ -765,6 +774,7 @@ body {
   display: flex;
   flex: 1;
   overflow: hidden;
+  overscroll-behavior: contain;
 }
 
 .settings-page-loading {
@@ -824,7 +834,7 @@ body {
 /* Settings Content */
 .settings-page-content {
   flex: 1;
-  overflow-y: auto;
+  overflow-y: scroll;
   padding: 24px 0 80px 0;
   overscroll-behavior: contain;
 }
@@ -834,6 +844,7 @@ body {
   flex-direction: column;
   gap: 24px;
   max-width: 640px;
+  min-height: 100%;
 }
 
 /* Theme Options */
@@ -1995,6 +2006,12 @@ body {
   .settings-page {
     height: auto;
     overflow: visible;
+    padding: 16px;
+  }
+
+  .main-content:has(.settings-page) {
+    overflow: visible;
+    padding: 0;
   }
 
   .settings-page-body {
