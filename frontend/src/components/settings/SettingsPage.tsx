@@ -13,10 +13,13 @@ interface ToastState {
   message: string;
 }
 
-export default function SettingsPage() {
-  const { user, isLoading: isUserLoading } = useUser();
+interface SettingsPageProps {
+  initialTab?: SettingsTab;
+}
 
-  const [activeTab, setActiveTab] = useState<SettingsTab>("general");
+export default function SettingsPage({ initialTab = "general" }: SettingsPageProps) {
+  const { user, isLoading: isUserLoading } = useUser();
+  const activeTab = initialTab;
   const [identities, setIdentities] = useState<ConnectedAccount[]>([]);
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [isLoadingData, setIsLoadingData] = useState(true);
@@ -174,7 +177,7 @@ export default function SettingsPage() {
       </div>
 
       <div className="settings-page-body">
-        <SettingsSidebar activeTab={activeTab} onTabChange={setActiveTab} />
+        <SettingsSidebar activeTab={activeTab} />
 
         <div className="settings-page-content">
           {activeTab === "general" && <GeneralSection />}

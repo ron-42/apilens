@@ -81,7 +81,7 @@ export default function Sidebar() {
           {!collapsed && <span className="nav-section-title">Support</span>}
           <ul className="nav-list">
             {secondaryNavigation.map((item) => {
-              const isActive = pathname === item.href;
+              const isActive = pathname === item.href || pathname.startsWith(item.href + "/");
               return (
                 <li key={item.name}>
                   <Link
