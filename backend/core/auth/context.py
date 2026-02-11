@@ -15,6 +15,7 @@ class TenantContext:
     tenant_id: str
     user_id: str
     email: str
+    app_id: str = ""
     role: str = "member"
     permissions: list[str] = field(default_factory=list)
 

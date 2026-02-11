@@ -324,17 +324,16 @@ class AuthService:
 
 
 API_KEY_PREFIX = "apilens_"
-MAX_API_KEYS_PER_USER = 10
+MAX_API_KEYS_PER_APP = 10
 
 
 class ApiKeyService:
     @staticmethod
-    def create_key(user: User, name: str) -> tuple[str, ApiKey]:
-        # Enforce per-user limit
-        active_count = ApiKey.objects.for_user(user).count()
-        if active_count >= MAX_API_KEYS_PER_USER:
+    def create_key(app, name: str) -> tuple[str, ApiKey]:
+        active_count = ApiKey.objects.for_app(app).count()
+        if active_count >= MAX_API_KEYS_PER_APP:
             raise RateLimitError(
-                f"Maximum of {MAX_API_KEYS_PER_USER} active API keys allowed"
+                f"Maximum of {MAX_API_KEYS_PER_APP} active API keys allowed per app"
             )
 
         raw_secret = secrets.token_urlsafe(40)
@@ -342,7 +341,7 @@ class ApiKeyService:
         prefix = raw_key[:16]
 
         api_key = ApiKey.objects.create(
-            user=user,
+            app=app,
             key_hash=_hash_token(raw_key),
             prefix=prefix,
             name=name[:100],
@@ -350,18 +349,18 @@ class ApiKeyService:
         return raw_key, api_key
 
     @staticmethod
-    def list_keys(user: User) -> list[ApiKey]:
-        return list(ApiKey.objects.for_user(user).order_by("-created_at"))
+    def list_keys(app) -> list[ApiKey]:
+        return list(ApiKey.objects.for_app(app).order_by("-created_at"))
 
     @staticmethod
-    def revoke_key(user: User, key_id: str) -> bool:
+    def revoke_key(app, key_id: str) -> bool:
         updated = ApiKey.objects.filter(
-            id=key_id, user=user, is_revoked=False
+            id=key_id, app=app, is_revoked=False
         ).update(is_revoked=True)
         return updated > 0
 
     @staticmethod
-    def revoke_all(user: User) -> int:
+    def revoke_all_for_app(app) -> int:
         return ApiKey.objects.filter(
-            user=user, is_revoked=False
+            app=app, is_revoked=False
         ).update(is_revoked=True)

@@ -3,7 +3,7 @@ import { withAuth, apiResult } from "@/lib/proxy";
 import { apiClient } from "@/lib/api-client";
 
 export const GET = () =>
-  withAuth(async () => apiResult(await apiClient.getApiKeys(), "keys"));
+  withAuth(async () => apiResult(await apiClient.getApps(), "apps"));
 
 export const POST = (request: Request) =>
   withAuth(async () => {
@@ -12,5 +12,5 @@ export const POST = (request: Request) =>
     if (!name) {
       return NextResponse.json({ error: "Name is required" }, { status: 400 });
     }
-    return apiResult(await apiClient.createApiKey(name));
+    return apiResult(await apiClient.createApp({ name, description: body.description || "" }));
   });

@@ -2,7 +2,7 @@ from django.http import HttpRequest
 from ninja import Router, File
 from ninja.files import UploadedFile
 
-from apps.auth.services import ApiKeyService, TokenService
+from apps.auth.services import TokenService
 from apps.users.models import User
 from apps.users.services import UserService
 from core.auth.authentication import jwt_auth, api_key_auth
@@ -15,9 +15,6 @@ from .schemas import (
     UserContextResponse,
     PictureResponse,
     SessionResponse,
-    CreateApiKeyRequest,
-    ApiKeyResponse,
-    CreateApiKeyResponse,
     MessageResponse,
     _build_picture_url,
 )
@@ -138,46 +135,3 @@ def revoke_session(request: HttpRequest, session_id: str):
     if not revoked:
         raise NotFoundError("Session not found")
     return {"message": "Session revoked"}
-
-
-# ── API Keys ──────────────────────────────────────────────────────────
-
-
-@router.post("/api-keys", response={201: CreateApiKeyResponse})
-def create_api_key(request: HttpRequest, data: CreateApiKeyRequest):
-    user: User = request.auth
-    if not data.name or not data.name.strip():
-        raise ValidationError("API key name is required")
-    raw_key, api_key = ApiKeyService.create_key(user, data.name.strip())
-    return 201, CreateApiKeyResponse(
-        key=raw_key,
-        id=api_key.id,
-        name=api_key.name,
-        prefix=api_key.prefix,
-        created_at=api_key.created_at,
-    )
-
-
-@router.get("/api-keys", response=list[ApiKeyResponse])
-def list_api_keys(request: HttpRequest):
-    user: User = request.auth
-    keys = ApiKeyService.list_keys(user)
-    return [
-        ApiKeyResponse(
-            id=k.id,
-            name=k.name,
-            prefix=k.prefix,
-            last_used_at=k.last_used_at,
-            created_at=k.created_at,
-        )
-        for k in keys
-    ]
-
-
-@router.delete("/api-keys/{key_id}", response=MessageResponse)
-def revoke_api_key(request: HttpRequest, key_id: str):
-    user: User = request.auth
-    revoked = ApiKeyService.revoke_key(user, key_id)
-    if not revoked:
-        raise NotFoundError("API key not found")
-    return {"message": "API key revoked"}

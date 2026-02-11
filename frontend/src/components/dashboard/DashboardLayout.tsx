@@ -7,9 +7,10 @@ import Navbar from "./Navbar";
 
 interface DashboardLayoutProps {
   children: React.ReactNode;
+  appSlug: string;
 }
 
-function DashboardInner({ children }: DashboardLayoutProps) {
+function DashboardInner({ children, appSlug }: DashboardLayoutProps) {
   const { isLoading } = useAuth();
   const { collapsed } = useSidebar();
 
@@ -24,9 +25,9 @@ function DashboardInner({ children }: DashboardLayoutProps) {
 
   return (
     <div className="dashboard-container">
-      <Sidebar />
+      <Sidebar appSlug={appSlug} />
       <div className={`main-wrapper ${collapsed ? "main-wrapper-expanded" : ""}`}>
-        <Navbar />
+        <Navbar appSlug={appSlug} />
         <main className="main-content">
           {children}
         </main>
@@ -35,10 +36,11 @@ function DashboardInner({ children }: DashboardLayoutProps) {
   );
 }
 
-export default function DashboardLayout({ children }: DashboardLayoutProps) {
+export default function DashboardLayout({ children, appSlug }: DashboardLayoutProps) {
   return (
     <SidebarProvider>
-      <DashboardInner>{children}</DashboardInner>
+      <DashboardInner appSlug={appSlug}>{children}</DashboardInner>
     </SidebarProvider>
   );
 }
+

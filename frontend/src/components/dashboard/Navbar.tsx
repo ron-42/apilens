@@ -2,10 +2,15 @@
 
 import { useAuth } from "@/components/providers/AuthProvider";
 import UserAvatar from "@/components/shared/UserAvatar";
-import { Search, Bell, LogOut, Settings, User } from "lucide-react";
+import Breadcrumbs from "./Breadcrumbs";
+import { Bell, LogOut, Settings } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
 
-export default function Navbar() {
+interface NavbarProps {
+  appSlug: string;
+}
+
+export default function Navbar({ appSlug }: NavbarProps) {
   const { user, isLoading, logout } = useAuth();
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -26,15 +31,7 @@ export default function Navbar() {
   return (
     <header className="navbar">
       <div className="navbar-left">
-        <div className="search-container">
-          <Search size={16} className="search-icon" />
-          <input
-            type="text"
-            placeholder="Search endpoints, logs..."
-            className="search-input"
-          />
-          <kbd className="search-kbd">⌘K</kbd>
-        </div>
+        <Breadcrumbs appSlug={appSlug} />
       </div>
 
       <div className="navbar-right">
@@ -67,13 +64,9 @@ export default function Navbar() {
                 <p className="dropdown-user-email">{displayEmail}</p>
               </div>
               <div className="dropdown-divider" />
-              <a href="/settings" className="dropdown-item">
+              <a href="/account" className="dropdown-item">
                 <Settings size={14} />
-                <span>Settings</span>
-              </a>
-              <a href="/settings/account" className="dropdown-item">
-                <User size={14} />
-                <span>Accounts</span>
+                <span>Account Settings</span>
               </a>
               <div className="dropdown-divider" />
               <button
@@ -93,3 +86,4 @@ export default function Navbar() {
     </header>
   );
 }
+

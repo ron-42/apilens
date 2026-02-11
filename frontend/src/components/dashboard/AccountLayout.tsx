@@ -21,14 +21,16 @@ export default function AccountLayout({ children }: AccountLayoutProps) {
   }
 
   return (
-    <div className="account-layout">
-      <header className="account-topbar">
-        <Link href="/" className="account-logo">
-          <span className="account-logo-text">API Lens</span>
-        </Link>
+    <div className="standalone-layout">
+      <header className="standalone-topbar">
+        <div className="standalone-topbar-left">
+          <Link href="/apps" className="standalone-logo">
+            <span className="standalone-logo-text">API Lens</span>
+          </Link>
+        </div>
         <Navbar />
       </header>
-      <main className="account-content">
+      <main className="standalone-content">
         {children}
       </main>
     </div>

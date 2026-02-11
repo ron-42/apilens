@@ -81,25 +81,5 @@ class SessionResponse(Schema):
     is_current: bool = False
 
 
-class CreateApiKeyRequest(Schema):
-    name: str
-
-
-class ApiKeyResponse(Schema):
-    id: UUID
-    name: str
-    prefix: str
-    last_used_at: Optional[datetime] = None
-    created_at: datetime
-
-
-class CreateApiKeyResponse(Schema):
-    key: str
-    id: UUID
-    name: str
-    prefix: str
-    created_at: datetime
-
-
 class MessageResponse(Schema):
     message: str
