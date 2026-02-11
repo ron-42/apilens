@@ -15,11 +15,11 @@ interface ToastState {
 }
 
 interface AppSettingsPageProps {
-  appId: string;
+  appSlug: string;
   initialTab?: AppSettingsTab;
 }
 
-export default function AppSettingsPage({ appId, initialTab = "general" }: AppSettingsPageProps) {
+export default function AppSettingsPage({ appSlug, initialTab = "general" }: AppSettingsPageProps) {
   const router = useRouter();
   const activeTab = initialTab;
   const [app, setApp] = useState<App | null>(null);
@@ -33,14 +33,14 @@ export default function AppSettingsPage({ appId, initialTab = "general" }: AppSe
 
   const fetchApp = useCallback(async () => {
     try {
-      const res = await fetch(`/api/apps/${appId}`);
+      const res = await fetch(`/api/apps/${appSlug}`);
       if (!res.ok) throw new Error("Failed to fetch app");
       const data = await res.json();
       setApp(data);
     } catch (error) {
       console.error("Error fetching app:", error);
     }
-  }, [appId]);
+  }, [appSlug]);
 
   useEffect(() => {
     fetchApp().finally(() => setIsLoading(false));
@@ -48,7 +48,7 @@ export default function AppSettingsPage({ appId, initialTab = "general" }: AppSe
 
   const handleUpdateApp = async (data: { name?: string; description?: string }) => {
     try {
-      const res = await fetch(`/api/apps/${appId}`, {
+      const res = await fetch(`/api/apps/${appSlug}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),
@@ -69,7 +69,7 @@ export default function AppSettingsPage({ appId, initialTab = "general" }: AppSe
 
   const handleDeleteApp = async () => {
     try {
-      const res = await fetch(`/api/apps/${appId}`, {
+      const res = await fetch(`/api/apps/${appSlug}`, {
         method: "DELETE",
       });
 
@@ -126,7 +126,7 @@ export default function AppSettingsPage({ appId, initialTab = "general" }: AppSe
       </div>
 
       <div className="settings-page-body">
-        <AppSettingsSidebar appId={appId} activeTab={activeTab} />
+        <AppSettingsSidebar appSlug={appSlug} activeTab={activeTab} />
 
         <div className="settings-page-content">
           {activeTab === "general" && (
@@ -134,7 +134,7 @@ export default function AppSettingsPage({ appId, initialTab = "general" }: AppSe
           )}
           {activeTab === "api-keys" && (
             <div className="settings-section-content">
-              <AppApiKeysSection appId={appId} showToast={showToast} />
+              <AppApiKeysSection appSlug={appSlug} showToast={showToast} />
             </div>
           )}
           {activeTab === "danger-zone" && (

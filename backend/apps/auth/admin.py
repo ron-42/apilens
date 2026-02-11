@@ -40,7 +40,7 @@ class MagicLinkTokenAdmin(admin.ModelAdmin):
 class ApiKeyAdmin(admin.ModelAdmin):
     list_display = [
         "id",
-        "app",
+        "user",
         "name",
         "prefix",
         "is_revoked",
@@ -48,6 +48,6 @@ class ApiKeyAdmin(admin.ModelAdmin):
         "created_at",
     ]
     list_filter = ["is_revoked", "created_at"]
-    search_fields = ["app__name", "app__owner__email", "name", "prefix"]
+    search_fields = ["user__email", "name", "prefix"]
     readonly_fields = ["id", "key_hash", "prefix", "created_at"]
-    raw_id_fields = ["app"]
+    raw_id_fields = ["user"]

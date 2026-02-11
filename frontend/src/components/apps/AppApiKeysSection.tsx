@@ -25,11 +25,11 @@ interface ApiKey {
 }
 
 interface AppApiKeysSectionProps {
-  appId: string;
+  appSlug: string;
   showToast: (type: "success" | "error", message: string) => void;
 }
 
-export default function AppApiKeysSection({ appId, showToast }: AppApiKeysSectionProps) {
+export default function AppApiKeysSection({ appSlug, showToast }: AppApiKeysSectionProps) {
   const [keys, setKeys] = useState<ApiKey[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -46,7 +46,7 @@ export default function AppApiKeysSection({ appId, showToast }: AppApiKeysSectio
 
   const fetchKeys = useCallback(async () => {
     try {
-      const res = await fetch(`/api/apps/${appId}/api-keys`);
+      const res = await fetch(`/api/apps/${appSlug}/api-keys`);
       if (!res.ok) throw new Error("Failed to fetch API keys");
       const data = await res.json();
       setKeys(data.keys);
@@ -55,7 +55,7 @@ export default function AppApiKeysSection({ appId, showToast }: AppApiKeysSectio
     } finally {
       setIsLoading(false);
     }
-  }, [appId]);
+  }, [appSlug]);
 
   useEffect(() => {
     fetchKeys();
@@ -97,7 +97,7 @@ export default function AppApiKeysSection({ appId, showToast }: AppApiKeysSectio
     if (!newKeyName.trim()) return;
     setIsCreating(true);
     try {
-      const res = await fetch(`/api/apps/${appId}/api-keys`, {
+      const res = await fetch(`/api/apps/${appSlug}/api-keys`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ name: newKeyName.trim() }),
@@ -132,7 +132,7 @@ export default function AppApiKeysSection({ appId, showToast }: AppApiKeysSectio
     if (!revokeTarget) return;
     setIsRevoking(true);
     try {
-      const res = await fetch(`/api/apps/${appId}/api-keys/${revokeTarget.id}`, {
+      const res = await fetch(`/api/apps/${appSlug}/api-keys/${revokeTarget.id}`, {
         method: "DELETE",
       });
       const data = await res.json();

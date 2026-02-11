@@ -6,7 +6,7 @@ import { Settings, Key, AlertTriangle } from "lucide-react";
 export type AppSettingsTab = "general" | "api-keys" | "danger-zone";
 
 interface AppSettingsSidebarProps {
-  appId: string;
+  appSlug: string;
   activeTab: AppSettingsTab;
 }
 
@@ -16,14 +16,14 @@ const menuItems: { id: AppSettingsTab; label: string; icon: React.ElementType }[
   { id: "danger-zone", label: "Danger Zone", icon: AlertTriangle },
 ];
 
-export default function AppSettingsSidebar({ appId, activeTab }: AppSettingsSidebarProps) {
+export default function AppSettingsSidebar({ appSlug, activeTab }: AppSettingsSidebarProps) {
   return (
     <nav className="settings-sidebar">
       <ul className="settings-sidebar-menu">
         {menuItems.map((item) => (
           <li key={item.id}>
             <Link
-              href={`/apps/${appId}/settings/${item.id}`}
+              href={`/apps/${appSlug}/settings/${item.id}`}
               className={`settings-sidebar-item ${activeTab === item.id ? "active" : ""}`}
             >
               <item.icon size={16} />

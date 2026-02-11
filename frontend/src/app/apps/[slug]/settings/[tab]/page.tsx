@@ -20,13 +20,14 @@ export async function generateMetadata({ params }: { params: Promise<{ tab: stri
 export default async function AppSettingsTabPage({
   params,
 }: {
-  params: Promise<{ id: string; tab: string }>;
+  params: Promise<{ slug: string; tab: string }>;
 }) {
-  const { id, tab } = await params;
+  const { slug, tab } = await params;
 
   if (!validTabs.includes(tab as AppSettingsTab)) {
     notFound();
   }
 
-  return <AppSettingsPage appId={id} initialTab={tab as AppSettingsTab} />;
+  return <AppSettingsPage appSlug={slug} initialTab={tab as AppSettingsTab} />;
 }
+

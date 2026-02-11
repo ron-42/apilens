@@ -18,11 +18,8 @@ class ApiKeyManager(models.Manager):
         qs = self.filter(is_revoked=False)
         return qs.exclude(expires_at__lte=timezone.now())
 
-    def for_app(self, app):
-        return self.active().filter(app=app)
-
     def for_user(self, user):
-        return self.active().filter(app__owner=user, app__is_active=True)
+        return self.active().filter(user=user)
 
 
 class MagicLinkTokenManager(models.Manager):

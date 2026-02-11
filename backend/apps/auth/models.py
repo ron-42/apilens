@@ -72,8 +72,8 @@ class MagicLinkToken(models.Model):
 
 class ApiKey(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    app = models.ForeignKey(
-        "projects.App",
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
         related_name="api_keys",
     )
@@ -92,7 +92,7 @@ class ApiKey(models.Model):
         ordering = ["-created_at"]
 
     def __str__(self):
-        return f"ApiKey({self.prefix}..., app={self.app_id})"
+        return f"ApiKey({self.prefix}..., user={self.user_id})"
 
     @property
     def is_expired(self):
