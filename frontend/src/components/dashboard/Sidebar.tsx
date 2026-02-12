@@ -2,7 +2,8 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
+import { useState, useEffect, useRef } from "react";
 import {
   Layers,
   ScrollText,
@@ -13,8 +14,18 @@ import {
   CircleHelpIcon,
   PanelLeftClose,
   PanelLeft,
+  ChevronsUpDown,
+  Plus,
+  Check,
 } from "lucide-react";
 import { useSidebar } from "@/components/providers/SidebarProvider";
+import { useApp } from "@/components/providers/AppProvider";
+
+interface AppListItem {
+  id: string;
+  name: string;
+  slug: string;
+}
 
 interface SidebarProps {
   appSlug: string;
@@ -22,9 +33,53 @@ interface SidebarProps {
 
 export default function Sidebar({ appSlug }: SidebarProps) {
   const pathname = usePathname();
+  const router = useRouter();
   const { collapsed, toggleSidebar } = useSidebar();
+  const { app: currentApp } = useApp();
+
+  const [apps, setApps] = useState<AppListItem[]>([]);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
   const basePath = `/apps/${appSlug}`;
+
+  const getCurrentSection = () => {
+    const parts = pathname.split("/").filter(Boolean);
+    return parts.slice(2).join("/") || "endpoints";
+  };
+
+  useEffect(() => {
+    async function fetchApps() {
+      try {
+        const res = await fetch("/api/apps");
+        if (res.ok) {
+          const data = await res.json();
+          setApps(data.apps || []);
+        }
+      } catch {
+        // ignore
+      }
+    }
+    fetchApps();
+  }, []);
+
+  useEffect(() => {
+    function handleClickOutside(e: MouseEvent) {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
+        setDropdownOpen(false);
+      }
+    }
+    if (dropdownOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+      return () => document.removeEventListener("mousedown", handleClickOutside);
+    }
+  }, [dropdownOpen]);
+
+  const handleSwitchApp = (slug: string) => {
+    setDropdownOpen(false);
+    const section = getCurrentSection();
+    router.push(`/apps/${slug}/${section}`);
+  };
 
   const navigation = [
     { name: "Endpoints", href: `${basePath}/endpoints`, icon: Layers },
@@ -38,6 +93,9 @@ export default function Sidebar({ appSlug }: SidebarProps) {
     { name: "Notifications", href: "/notifications", icon: Bell },
     { name: "Help & Support", href: "/help", icon: CircleHelpIcon },
   ];
+
+  const displayName = currentApp?.name || appSlug;
+  const initial = displayName.charAt(0).toUpperCase();
 
   return (
     <aside className={`sidebar ${collapsed ? "sidebar-collapsed" : ""}`}>
@@ -55,6 +113,57 @@ export default function Sidebar({ appSlug }: SidebarProps) {
             <span className="logo-text">API Lens</span>
           )}
         </Link>
+      </div>
+
+      {/* App Switcher */}
+      <div className="app-switcher" ref={dropdownRef}>
+        <button
+          className="app-switcher-trigger"
+          onClick={() => setDropdownOpen((prev) => !prev)}
+          title={collapsed ? displayName : undefined}
+        >
+          <span className="app-switcher-avatar">{initial}</span>
+          {!collapsed && (
+            <>
+              <span className="app-switcher-label">{displayName}</span>
+              <ChevronsUpDown size={14} className="app-switcher-icon" />
+            </>
+          )}
+        </button>
+
+        {dropdownOpen && (
+          <div className="app-switcher-dropdown">
+            <div className="app-switcher-section-label">Apps</div>
+            <div className="app-switcher-list">
+              {apps.map((app) => {
+                const isActive = app.slug === appSlug;
+                return (
+                  <button
+                    key={app.id}
+                    className={`app-switcher-option ${isActive ? "app-switcher-option-active" : ""}`}
+                    onClick={() => handleSwitchApp(app.slug)}
+                  >
+                    <span className="app-switcher-option-avatar">
+                      {app.name.charAt(0).toUpperCase()}
+                    </span>
+                    <span className="app-switcher-option-name">{app.name}</span>
+                    {isActive && <Check size={14} className="app-switcher-check" />}
+                  </button>
+                );
+              })}
+            </div>
+            <div className="app-switcher-footer">
+              <Link
+                href="/apps/new"
+                className="app-switcher-action"
+                onClick={() => setDropdownOpen(false)}
+              >
+                <Plus size={14} />
+                <span>Create app</span>
+              </Link>
+            </div>
+          </div>
+        )}
       </div>
 
       <nav className="sidebar-nav">
@@ -119,4 +228,3 @@ export default function Sidebar({ appSlug }: SidebarProps) {
     </aside>
   );
 }
-

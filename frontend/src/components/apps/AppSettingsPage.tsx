@@ -1,9 +1,10 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { X, Check } from "lucide-react";
-import type { App } from "@/types/app";
+import { useApp } from "@/components/providers/AppProvider";
+import PageHeader from "@/components/dashboard/PageHeader";
 import AppSettingsSidebar, { AppSettingsTab } from "./AppSettingsSidebar";
 import AppGeneralSection from "./AppGeneralSection";
 import AppApiKeysSection from "./AppApiKeysSection";
@@ -22,29 +23,13 @@ interface AppSettingsPageProps {
 export default function AppSettingsPage({ appSlug, initialTab = "general" }: AppSettingsPageProps) {
   const router = useRouter();
   const activeTab = initialTab;
-  const [app, setApp] = useState<App | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const { app, isLoading } = useApp();
   const [toast, setToast] = useState<ToastState | null>(null);
 
   const showToast = useCallback((type: "success" | "error", message: string) => {
     setToast({ type, message });
     setTimeout(() => setToast(null), 5000);
   }, []);
-
-  const fetchApp = useCallback(async () => {
-    try {
-      const res = await fetch(`/api/apps/${appSlug}`);
-      if (!res.ok) throw new Error("Failed to fetch app");
-      const data = await res.json();
-      setApp(data);
-    } catch (error) {
-      console.error("Error fetching app:", error);
-    }
-  }, [appSlug]);
-
-  useEffect(() => {
-    fetchApp().finally(() => setIsLoading(false));
-  }, [fetchApp]);
 
   const handleUpdateApp = async (data: { name?: string; description?: string }) => {
     try {
@@ -60,8 +45,11 @@ export default function AppSettingsPage({ appSlug, initialTab = "general" }: App
       }
 
       const updated = await res.json();
-      setApp(updated);
       showToast("success", "App updated successfully");
+
+      if (updated.slug && updated.slug !== appSlug) {
+        router.replace(`/apps/${updated.slug}/settings/${activeTab}`);
+      }
     } catch (error) {
       showToast("error", error instanceof Error ? error.message : "Failed to update app");
     }
@@ -87,9 +75,6 @@ export default function AppSettingsPage({ appSlug, initialTab = "general" }: App
   if (isLoading) {
     return (
       <div className="settings-page">
-        <div className="settings-page-header">
-          <h1 className="settings-page-title">App Settings</h1>
-        </div>
         <div className="settings-page-loading">
           <div className="loading-spinner" />
         </div>
@@ -100,9 +85,7 @@ export default function AppSettingsPage({ appSlug, initialTab = "general" }: App
   if (!app) {
     return (
       <div className="settings-page">
-        <div className="settings-page-header">
-          <h1 className="settings-page-title">App not found</h1>
-        </div>
+        <PageHeader title="App not found" />
       </div>
     );
   }
@@ -121,9 +104,7 @@ export default function AppSettingsPage({ appSlug, initialTab = "general" }: App
         </div>
       )}
 
-      <div className="settings-page-header">
-        <h1 className="settings-page-title">{app.name} Settings</h1>
-      </div>
+      <PageHeader title="Settings" />
 
       <div className="settings-page-body">
         <AppSettingsSidebar appSlug={appSlug} activeTab={activeTab} />

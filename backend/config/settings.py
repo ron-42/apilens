@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     "apps.users",
     "apps.auth",
     "apps.projects",
+    "apps.endpoints",
 ]
 
 # Custom User Model

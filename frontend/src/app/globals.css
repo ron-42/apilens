@@ -259,6 +259,199 @@ body {
   height: 28px;
 }
 
+/* ── App Switcher ────────────────────────────────────── */
+
+.app-switcher {
+  position: relative;
+  padding: 12px;
+  padding-bottom: 4px;
+}
+
+.app-switcher-trigger {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  height: 40px;
+  padding: 0 10px;
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: var(--font-family);
+  cursor: pointer;
+  transition: border-color 0.15s;
+}
+
+.app-switcher-trigger:hover {
+  border-color: var(--border-hover, #333);
+}
+
+.app-switcher-avatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  min-width: 22px;
+  border-radius: 6px;
+  background: linear-gradient(135deg, var(--accent) 0%, #8b5cf6 100%);
+  color: #fff;
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.app-switcher-label {
+  flex: 1;
+  min-width: 0;
+  text-align: left;
+  font-size: 13px;
+  font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  line-height: 1;
+}
+
+.app-switcher-icon {
+  flex-shrink: 0;
+  color: var(--text-muted);
+  width: 14px;
+  height: 14px;
+}
+
+/* Dropdown panel */
+
+.app-switcher-dropdown {
+  position: absolute;
+  top: calc(100% + 2px);
+  left: 12px;
+  right: 12px;
+  background-color: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
+  z-index: 200;
+  animation: dropdown-in 0.15s ease;
+}
+
+.app-switcher-section-label {
+  padding: 10px 14px 4px;
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+  font-family: var(--font-family);
+}
+
+.app-switcher-list {
+  max-height: 200px;
+  overflow-y: auto;
+  padding: 4px 6px;
+}
+
+.app-switcher-option {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  height: 36px;
+  padding: 0 8px;
+  margin: 0;
+  border: none;
+  border-radius: 8px;
+  background-color: transparent;
+  color: var(--text-primary);
+  font-size: 13px;
+  font-family: var(--font-family);
+  cursor: pointer;
+  transition: background-color 0.1s;
+  text-align: left;
+}
+
+.app-switcher-option:hover {
+  background-color: var(--bg-hover);
+}
+
+.app-switcher-option-active {
+  background-color: var(--bg-hover);
+}
+
+.app-switcher-option-avatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  min-width: 20px;
+  border-radius: 5px;
+  background: linear-gradient(135deg, var(--accent) 0%, #8b5cf6 100%);
+  color: #fff;
+  font-size: 9px;
+  font-weight: 700;
+}
+
+.app-switcher-option-name {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.app-switcher-check {
+  flex-shrink: 0;
+  color: var(--accent);
+  width: 14px;
+  height: 14px;
+}
+
+.app-switcher-footer {
+  border-top: 1px solid var(--border-color);
+  padding: 4px 6px;
+}
+
+.app-switcher-action {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  height: 36px;
+  padding: 0 8px;
+  border-radius: 8px;
+  background-color: transparent;
+  color: var(--text-muted);
+  font-size: 13px;
+  font-family: var(--font-family);
+  text-decoration: none;
+  transition: background-color 0.1s, color 0.1s;
+}
+
+.app-switcher-action:hover {
+  background-color: var(--bg-hover);
+  color: var(--text-primary);
+}
+
+/* Collapsed sidebar: show only the avatar */
+.sidebar-collapsed .app-switcher {
+  padding: 8px;
+  padding-bottom: 0;
+}
+
+.sidebar-collapsed .app-switcher-trigger {
+  justify-content: center;
+  border-color: transparent;
+  padding: 0;
+  height: 36px;
+  width: 36px;
+  margin: 0 auto;
+}
+
+.sidebar-collapsed .app-switcher-trigger:hover {
+  background-color: var(--bg-hover);
+}
+
 .sidebar-nav {
   flex: 1;
   padding: 16px 12px;
@@ -782,21 +975,15 @@ body {
   height: calc(100vh - var(--navbar-height));
   overflow: hidden;
   overscroll-behavior: contain;
-  padding: 24px;
+  padding: 32px;
   padding-bottom: 0;
 }
 
-.settings-page-header {
-  padding: 0 0 16px 0;
+.settings-page > .page-header {
   border-bottom: 1px solid var(--border-color);
+  padding-bottom: 20px;
+  margin-bottom: 0;
   flex-shrink: 0;
-}
-
-.settings-page-title {
-  font-size: 24px;
-  font-weight: 600;
-  color: var(--text-primary);
-  margin: 0;
 }
 
 .settings-page-body {
@@ -3975,19 +4162,47 @@ a.settings-btn {
 }
 
 /* Placeholder Pages (coming soon) */
+/* ── Page Header ────────────────────────────────────── */
+
+.page-header {
+  padding: 0 0 24px;
+  width: 100%;
+}
+
+.page-header-app {
+  display: block;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-muted);
+  margin-bottom: 4px;
+  letter-spacing: 0.01em;
+}
+
+.page-header-title {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0;
+  line-height: 1.3;
+}
+
+.page-header-desc {
+  font-size: 14px;
+  color: var(--text-secondary);
+  margin: 6px 0 0;
+}
+
 .placeholder-page {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  padding: 80px 24px;
-  min-height: 400px;
+  align-items: flex-start;
+  padding: 32px;
 }
 
 .placeholder-icon {
   color: var(--text-muted);
-  margin-bottom: 16px;
+  margin-top: 48px;
+  align-self: center;
 }
 
 .placeholder-title {

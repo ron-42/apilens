@@ -6,8 +6,8 @@ import Breadcrumbs from "./Breadcrumbs";
 import { Bell, LogOut, Settings } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
 
-interface NavbarProps {
-  appSlug: string;
+export interface NavbarProps {
+  appSlug?: string;
 }
 
 export default function Navbar({ appSlug }: NavbarProps) {
@@ -31,7 +31,7 @@ export default function Navbar({ appSlug }: NavbarProps) {
   return (
     <header className="navbar">
       <div className="navbar-left">
-        <Breadcrumbs appSlug={appSlug} />
+        {appSlug && <Breadcrumbs appSlug={appSlug} />}
       </div>
 
       <div className="navbar-right">

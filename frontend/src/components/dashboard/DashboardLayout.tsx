@@ -1,6 +1,7 @@
 "use client";
 
 import { useAuth } from "@/components/providers/AuthProvider";
+import { AppProvider } from "@/components/providers/AppProvider";
 import { SidebarProvider, useSidebar } from "@/components/providers/SidebarProvider";
 import Sidebar from "./Sidebar";
 import Navbar from "./Navbar";
@@ -39,7 +40,9 @@ function DashboardInner({ children, appSlug }: DashboardLayoutProps) {
 export default function DashboardLayout({ children, appSlug }: DashboardLayoutProps) {
   return (
     <SidebarProvider>
-      <DashboardInner appSlug={appSlug}>{children}</DashboardInner>
+      <AppProvider appSlug={appSlug}>
+        <DashboardInner appSlug={appSlug}>{children}</DashboardInner>
+      </AppProvider>
     </SidebarProvider>
   );
 }

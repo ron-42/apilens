@@ -271,48 +271,48 @@ export const apiClient = {
   // ── Apps ──────────────────────────────────────────────────────────
 
   async getApps(): Promise<ApiResponse<AppListItem[]>> {
-    return fetchDjango<AppListItem[]>("/apps");
+    return fetchDjango<AppListItem[]>("/apps/");
   },
 
-  async getApp(appId: string): Promise<ApiResponse<AppInfo>> {
-    return fetchDjango<AppInfo>(`/apps/${appId}`);
+  async getApp(slug: string): Promise<ApiResponse<AppInfo>> {
+    return fetchDjango<AppInfo>(`/apps/${slug}`);
   },
 
   async createApp(data: { name: string; description?: string }): Promise<ApiResponse<AppInfo>> {
-    return fetchDjango<AppInfo>("/apps", {
+    return fetchDjango<AppInfo>("/apps/", {
       method: "POST",
       body: JSON.stringify(data),
     });
   },
 
-  async updateApp(appId: string, data: { name?: string; description?: string }): Promise<ApiResponse<AppInfo>> {
-    return fetchDjango<AppInfo>(`/apps/${appId}`, {
+  async updateApp(slug: string, data: { name?: string; description?: string }): Promise<ApiResponse<AppInfo>> {
+    return fetchDjango<AppInfo>(`/apps/${slug}`, {
       method: "PATCH",
       body: JSON.stringify(data),
     });
   },
 
-  async deleteApp(appId: string): Promise<ApiResponse<{ message: string }>> {
-    return fetchDjango<{ message: string }>(`/apps/${appId}`, {
+  async deleteApp(slug: string): Promise<ApiResponse<{ message: string }>> {
+    return fetchDjango<{ message: string }>(`/apps/${slug}`, {
       method: "DELETE",
     });
   },
 
   // ── App-scoped API Keys ────────────────────────────────────────────
 
-  async getAppApiKeys(appId: string): Promise<ApiResponse<ApiKeyInfo[]>> {
-    return fetchDjango<ApiKeyInfo[]>(`/apps/${appId}/api-keys`);
+  async getAppApiKeys(slug: string): Promise<ApiResponse<ApiKeyInfo[]>> {
+    return fetchDjango<ApiKeyInfo[]>(`/apps/${slug}/api-keys`);
   },
 
-  async createAppApiKey(appId: string, name: string): Promise<ApiResponse<ApiKeyCreateResult>> {
-    return fetchDjango<ApiKeyCreateResult>(`/apps/${appId}/api-keys`, {
+  async createAppApiKey(slug: string, name: string): Promise<ApiResponse<ApiKeyCreateResult>> {
+    return fetchDjango<ApiKeyCreateResult>(`/apps/${slug}/api-keys`, {
       method: "POST",
       body: JSON.stringify({ name }),
     });
   },
 
-  async revokeAppApiKey(appId: string, keyId: string): Promise<ApiResponse<{ message: string }>> {
-    return fetchDjango<{ message: string }>(`/apps/${appId}/api-keys/${keyId}`, {
+  async revokeAppApiKey(slug: string, keyId: string): Promise<ApiResponse<{ message: string }>> {
+    return fetchDjango<{ message: string }>(`/apps/${slug}/api-keys/${keyId}`, {
       method: "DELETE",
     });
   },

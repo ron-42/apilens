@@ -26,7 +26,7 @@ export default function CreateAppForm() {
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Failed to create app");
-      router.push(`/apps/${data.id}/settings/api-keys`);
+      router.push(`/apps/${data.slug}/settings/api-keys`);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to create app");
     } finally {
