@@ -59,6 +59,12 @@
               "blog/multi-tenant-guardrails",
               "blog/clickhouse-ingest-patterns"
             ]
+          },
+          {
+            "group": "Release Notes",
+            "pages": [
+              "releases/alpha-1-launch"
+            ]
           }
         ]
       }
