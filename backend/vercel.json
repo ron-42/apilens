@@ -1,5 +1,5 @@
 {
-  "buildCommand": "if [ \"$VERCEL_ENV\" = \"production\" ]; then python manage.py makemigrations --noinput && python manage.py migrate --noinput && if [ -n \"$APILENS_CLICKHOUSE_URL\" ] || [ -n \"$APILENS_CLICKHOUSE_HOST\" ] || [ -n \"$CLICKHOUSE_URL\" ] || [ -n \"$CLICKHOUSE_HOST\" ]; then python manage.py clickhouse_migrate; fi; fi",
+  "buildCommand": "sh scripts/vercel_build.sh",
   "builds": [
     {
       "src": "config/wsgi.py",
