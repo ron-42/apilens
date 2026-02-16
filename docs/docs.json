@@ -14,7 +14,7 @@
   "navigation": {
     "tabs": [
       {
-        "tab": "Developer",
+        "tab": "Guide",
         "groups": [
           {
             "group": "Start Here",
@@ -23,6 +23,16 @@
               "getting-started/introduction",
               "getting-started/quickstart",
               "getting-started/architecture"
+            ]
+          },
+          {
+            "group": "Operate",
+            "pages": [
+              "customer/introduction",
+              "customer/sign-in-and-access",
+              "customer/create-your-first-app",
+              "customer/monitor-endpoints-and-logs",
+              "customer/troubleshooting"
             ]
           },
           {
@@ -40,17 +50,18 @@
             ]
           },
           {
+            "group": "SDK",
+            "pages": [
+              "sdk/building-an-sdk",
+              "sdk/python-setup"
+            ]
+          },
+          {
             "group": "API Reference",
             "openapi": {
               "source": "https://api.apilens.ai/api/v1/openapi.json",
               "directory": "api-reference"
             }
-          },
-          {
-            "group": "SDK",
-            "pages": [
-              "sdk/building-an-sdk"
-            ]
           },
           {
             "group": "Engineering Blog",

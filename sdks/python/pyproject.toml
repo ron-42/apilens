@@ -64,4 +64,4 @@ Documentation = "https://apilens.ai"
 Repository = "https://github.com/apilens/apilens"
 
 [tool.hatch.build.targets.wheel]
-packages = ["apilens"]
+packages = ["apilens", "apilenss"]

@@ -1,6 +1,6 @@
 ---
-title: 'Building an SDK'
-description: 'Guide to build and ship an APILens ingest SDK with stable contracts and batching.'
+title: "Building an SDK"
+description: "Authoritative guidance for the official API Lens Python SDK and what is supported today."
 ---
 
 ## SDK Goal
@@ -14,47 +14,35 @@ Your SDK should make ingest trivial:
 
 ## Official Python SDK
 
-APILens now ships a Python SDK scaffold in-repo:
+API Lens ships an official Python SDK in `sdks/python`, published as `apilenss`.
 
-- `sdks/python`
-- package name: `apilenss` (import as `apilens`)
-- integrations: OpenTelemetry core, FastAPI, Flask
+Supported today:
+- FastAPI (`apilens.fastapi` middleware)
+- Flask (`apilens.flask` wrapper)
+- Django / Django Ninja (`apilens.django` middleware)
 
-Current framework modules:
+Planned / not supported yet (do not wire these): Starlette, Litestar, BlackSheep. We’ll add them when they reach parity; track in the SDK repo issues.
 
-- `apilens.fastapi` (ASGI middleware)
-- `apilens.starlette` (ASGI middleware)
-- `apilens.django` (Django middleware, DRF + Ninja)
-- `apilens.flask` (WSGI wrapper)
-- `apilens.litestar` (plugin protocol)
-- `apilens.blacksheep` (ASGI middleware)
-
-Install locally during development:
-
-```bash
-pip install ./sdks/python
-pip install './sdks/python[all]'
-```
-
-Install from PyPI:
-
+Get the exact install and middleware snippets in `sdk/python-setup.mdx`. Use extras for the framework you need:
 ```bash
 pip install "apilenss[fastapi]"
+pip install "apilenss[flask]"
+pip install "apilenss[django]"
 ```
 
-Minimal FastAPI usage (no manual instrumentation):
-
+Minimal FastAPI example (supported):
 ```python
 from fastapi import FastAPI
-from apilens.fastapi import ApiLensGatewayMiddleware
+from apilens.fastapi import ApiLensMiddleware
 
 app = FastAPI()
 app.add_middleware(
-    ApiLensGatewayMiddleware,
+    ApiLensMiddleware,
     api_key="your_app_api_key",
     base_url="https://api.apilens.ai/api/v1",
     env="production",
     enable_request_logging=True,
+    log_request_headers=True,
     log_request_body=True,
     log_response_body=True,
 )

@@ -74,12 +74,12 @@ No OpenTelemetry instrumentation is required for endpoint + payload monitoring.
 from fastapi import FastAPI
 from typing import Annotated
 from fastapi import Depends, Request
-from apilens.fastapi import ApiLensGatewayMiddleware, track_consumer
+from apilens.fastapi import ApiLensMiddleware, set_consumer
 
 app = FastAPI()
 
 app.add_middleware(
-    ApiLensGatewayMiddleware,
+    ApiLensMiddleware,
     api_key="your_app_api_key",
     base_url="https://api.apilens.ai/api/v1",
     env="production",
@@ -89,7 +89,7 @@ app.add_middleware(
 )
 
 def identify_consumer(request: Request, user_id: Annotated[str, Depends(lambda: "user_123")]):
-    track_consumer(request, identifier=user_id, name="Demo User", group="starter")
+    set_consumer(request, identifier=user_id, name="Demo User", group="starter")
 
 app.router.dependencies.append(Depends(identify_consumer))
 
