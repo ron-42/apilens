@@ -102,7 +102,7 @@ class ApiLensClient {
       baseUrl: String(
         config.baseUrl || config.base_url || "https://api.apilens.ai/api/v1",
       ),
-      ingestPath: String(config.ingestPath || config.ingest_path || "/ingest/requests"),
+      ingestPath: String(config.ingestPath || config.ingest_path || "ingest/requests"),
       environment: String(config.environment || "production"),
       batchSize: Math.max(toNonNegativeInt(config.batchSize, 200), 1),
       flushIntervalMs: Math.max(toNonNegativeInt(config.flushIntervalMs, 3000), 50),
@@ -259,10 +259,20 @@ class ApiLensClient {
   }
 
   private async sendBatch(batch: ApiLensRecord[]): Promise<void> {
-    const endpoint = new URL(
-      this.config.ingestPath,
-      `${this.config.baseUrl.replace(/\/$/, "")}/`,
-    ).toString();
+    const rawIngestPath = String(this.config.ingestPath || "ingest/requests").trim();
+    const baseUrl = this.config.baseUrl.replace(/\/$/, "");
+
+    let endpoint: string;
+    if (/^https?:\/\//i.test(rawIngestPath)) {
+      endpoint = rawIngestPath;
+    } else if (rawIngestPath.startsWith("/")) {
+      // Backward-compatible behavior: explicit leading slash means host-root path.
+      const origin = new URL(`${baseUrl}/`).origin;
+      endpoint = new URL(rawIngestPath, origin).toString();
+    } else {
+      // Relative path appends to base path (e.g. /api/v1 + ingest/requests).
+      endpoint = new URL(rawIngestPath, `${baseUrl}/`).toString();
+    }
 
     const controller = new AbortController();
     const timeout = setTimeout(() => {

@@ -7,6 +7,6 @@ export default defineConfig({
   sourcemap: true,
   clean: true,
   splitting: false,
-  bundle: false,
+  bundle: true,
   platform: "node",
 });

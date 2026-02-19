@@ -1,6 +1,6 @@
 {
   "name": "apilens-js-sdk",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "API Lens JavaScript SDK with first-class Express middleware",
   "license": "MIT",
   "type": "module",
@@ -10,6 +10,7 @@
   "files": [
     "dist",
     "README.md",
+    "CHANGELOG.md",
     "LICENSE"
   ],
   "exports": {

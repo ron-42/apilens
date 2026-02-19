@@ -5,6 +5,12 @@ JavaScript SDK for API Lens with an Express-first middleware API.
 ## Install
 
 ```bash
+npm install apilens-js-sdk
+```
+
+For local workspace testing:
+
+```bash
 npm install ./sdks/js
 ```
 
@@ -29,6 +35,11 @@ useApiLens(app, {
 app.get("/v1/orders", (req, res) => {
   setConsumer(req, { id: "user_123", name: "Demo User", group: "starter" });
   res.json({ ok: true });
+});
+
+process.on("SIGTERM", async () => {
+  await app.apilensClient?.handleShutdown({ flush: true });
+  process.exit(0);
 });
 ```
 
@@ -66,6 +77,11 @@ await client.handleShutdown({ flush: true });
 ## Notes
 
 - Add `express.json()` before the API Lens middleware if you want request payload capture.
+- `apiKey` is required; prefer loading from env (`APILENS_API_KEY`).
+- `ingestPath` resolution rules:
+  - `ingest/requests` -> appended to `baseUrl` path.
+  - `/ingest/requests` -> resolved from host root.
+  - `https://...` -> used as-is.
 - Default batch size: `200`
 - Default flush interval: `3000ms`
 - Backend max ingest batch: `1000` records per request

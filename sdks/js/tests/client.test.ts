@@ -83,4 +83,64 @@ describe("ApiLensClient", () => {
     expect(sent).toBe(1);
     expect(attempts).toBe(3);
   });
+
+  it("resolves relative ingest path against baseUrl path", async () => {
+    const urls: string[] = [];
+    const client = new ApiLensClient({
+      apiKey: "test",
+      baseUrl: "http://localhost:8000/api/v1",
+      ingestPath: "ingest/requests",
+      enabled: true,
+      batchSize: 10,
+      fetchImpl: async (url) => {
+        urls.push(String(url));
+        return new Response(null, { status: 200 });
+      },
+    });
+
+    client.stop();
+    client.capture({ method: "GET", path: "/x", status_code: 200, response_time_ms: 1 });
+    await client.flushAll();
+    expect(urls[0]).toBe("http://localhost:8000/api/v1/ingest/requests");
+  });
+
+  it("keeps leading slash ingest path at host root", async () => {
+    const urls: string[] = [];
+    const client = new ApiLensClient({
+      apiKey: "test",
+      baseUrl: "http://localhost:8000/api/v1",
+      ingestPath: "/ingest/requests",
+      enabled: true,
+      batchSize: 10,
+      fetchImpl: async (url) => {
+        urls.push(String(url));
+        return new Response(null, { status: 200 });
+      },
+    });
+
+    client.stop();
+    client.capture({ method: "GET", path: "/x", status_code: 200, response_time_ms: 1 });
+    await client.flushAll();
+    expect(urls[0]).toBe("http://localhost:8000/ingest/requests");
+  });
+
+  it("uses absolute ingestPath as-is", async () => {
+    const urls: string[] = [];
+    const client = new ApiLensClient({
+      apiKey: "test",
+      baseUrl: "http://localhost:8000/api/v1",
+      ingestPath: "https://ingest.example.com/v2/requests",
+      enabled: true,
+      batchSize: 10,
+      fetchImpl: async (url) => {
+        urls.push(String(url));
+        return new Response(null, { status: 200 });
+      },
+    });
+
+    client.stop();
+    client.capture({ method: "GET", path: "/x", status_code: 200, response_time_ms: 1 });
+    await client.flushAll();
+    expect(urls[0]).toBe("https://ingest.example.com/v2/requests");
+  });
 });
